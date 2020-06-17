@@ -22,4 +22,11 @@ export class IngresoEgresoService {
       .then((resp) => console.log(resp))
       .catch((err) => console.log(err));
   }
+
+  initIngresosEgresosListener(uid: string) {
+    this.firestore
+      .collection(`${uid}/ingresos-egresos/items`)
+      .valueChanges()
+      .subscribe((resp) => console.log(resp));
+  }
 }
