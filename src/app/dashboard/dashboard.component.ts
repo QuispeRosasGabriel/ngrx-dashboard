@@ -4,6 +4,7 @@ import { Store } from "@ngrx/store";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
 import { IngresoEgresoService } from "../services/ingreso-egreso.service";
+import * as ingresoEgresoActions from "../ingreso-egreso/ingreso-egreso.actions";
 
 @Component({
   selector: "app-dashboard",
@@ -12,6 +13,8 @@ import { IngresoEgresoService } from "../services/ingreso-egreso.service";
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   userSubs: Subscription;
+  ingresosSubs: Subscription;
+
   constructor(
     private store: Store<AppState>,
     private _ingresoEgresoService: IngresoEgresoService
@@ -22,11 +25,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .select("user")
       .pipe(filter((auth) => auth.user != null))
       .subscribe(({ user }) => {
-        this._ingresoEgresoService.initIngresosEgresosListener(user.uid);
+        this.ingresosSubs = this.userSubs = this._ingresoEgresoService
+          .initIngresosEgresosListener(user.uid)
+          .subscribe((ingresosEgresosFB) => {
+            this.store.dispatch(
+              ingresoEgresoActions.setItems({ items: ingresosEgresosFB })
+            );
+          });
       });
   }
 
   ngOnDestroy() {
     this.userSubs.unsubscribe();
+    this.ingresosSubs.unsubscribe();
   }
 }

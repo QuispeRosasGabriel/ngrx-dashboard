@@ -25,19 +25,16 @@ export class IngresoEgresoService {
   }
 
   initIngresosEgresosListener(uid: string) {
-    this.firestore
+    return this.firestore
       .collection(`${uid}/ingresos-egresos/items`)
       .snapshotChanges()
       .pipe(
-        map((snapshot) => {
-          return snapshot.map((doc) => {
-            return {
-              uid: doc.payload.doc.id,
-              ...(doc.payload.doc.data() as any),
-            };
-          });
-        })
-      )
-      .subscribe((resp) => console.log(resp));
+        map((snapshot) =>
+          snapshot.map((doc) => ({
+            uid: doc.payload.doc.id,
+            ...(doc.payload.doc.data() as any),
+          }))
+        )
+      );
   }
 }

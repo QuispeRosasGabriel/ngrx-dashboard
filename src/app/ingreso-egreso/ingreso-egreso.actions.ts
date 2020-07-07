@@ -5,4 +5,4 @@ export const setItems = createAction(
   "[IngresoEgreso] Set Items",
   props<{ items: IngresoEgreso[] }>()
 );
-export const unSetItems = createAction("[Ingreso Egreso] Unset Items");
+export const unSetItems = createAction("[IngresoEgreso] Unset Items");
