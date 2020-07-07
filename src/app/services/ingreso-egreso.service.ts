@@ -16,12 +16,11 @@ export class IngresoEgresoService {
 
   crearIngresoEgreso(ingresoEgreso: IngresoEgreso) {
     const uid = this._authService.user.uid;
-    this.firestore
+    delete ingresoEgreso.uid;
+    return this.firestore
       .doc(`${uid}/ingresos-egresos`)
       .collection("items")
-      .add({ ...ingresoEgreso })
-      .then((resp) => console.log(resp))
-      .catch((err) => console.log(err));
+      .add({ ...ingresoEgreso });
   }
 
   initIngresosEgresosListener(uid: string) {
